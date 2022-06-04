@@ -6,39 +6,52 @@ import matplotlib.pyplot as plt
 import numpy as np
 from data_loader import load_batch
 from torch import optim
+from sklearn.metrics import accuracy_score
 
 
 
-model = CNN()
-train_loader, test_loader, class_list, class_idx=load_batch('/Users/szokirov/Documents/Datasets/Intel')
 
-optimizer = optim.Adam(model.parameters(), lr=0.001)
-criterion = nn.CrossEntropyLoss()
+def fit(model, device, num_epoch, optimizer, criterion, train_loader):
+    train_losses_list = []
+    mean_acc = []
+    for epoch in range(num_epoch):
 
-num_epoch = 1
-train_losses_list = []
-test_losses_list = []
-test_acc = []
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        train_loss = []
+        test_loss = []
+        benchmark = 0.90
+        acc_list = []
+        for idx, (image, label) in enumerate(iter(train_loader)):
 
-model.to(device)
+            image, label = image.to(device), label.to(device)
+            optimizer.zero_grad()
+            predictions = model.forward(image)
+            train_label = predictions.argmax(dim=1)
+            loss = criterion(predictions, label)
+            loss.backward()
 
-for epoch in range(num_epoch):
-    train_loss = []
-    test_loss = []
-    benchmark = 0.90
-    for idx, (image, label) in enumerate(iter(train_loader)):
-        image, label = image.to(device), label.to(device)
-        optimizer.zero_grad()
-        predictions = model.forward(image)
-        loss = criterion(predictions, label)
-        loss.backward()
-        optimizer.step()
-        train_loss.append(loss.item())
-        print(f"Epoch: {epoch+1}/{num_epoch}, train losses: {loss.item()}")
-    avg_loss = sum(train_loss)/len(train_loss)
-    train_losses_list.append(avg_loss)
+            optimizer.step()
+        
+            train_loss.append(loss.item())
+            accuracy = accuracy_score(label, train_label)
+            acc_list.append(accuracy)
+            # print(f"Accuracy for each epoch is: {accuracy}, test losses: {loss.item()}")
 
+            print(f"Epoch: {epoch+1}/{num_epoch}, train losses: {loss.item()}, accuracy: {accuracy}")
+        mean_accur_batch=sum(acc_list)/len(acc_list)
+        avg_loss = sum(train_loss)/len(train_loss)
+        train_losses_list.append(avg_loss)
+        mean_acc.append(mean_accur_batch)
+    for i in mean_acc:
+        if benchmark < i:
+            torch.save(model.state_dict(),'model_trained.pth')
+            state_dict = torch.load('model_trained.pth')
+            print(state_dict.keys())
+            print(model.load_state_dict(state_dict))
+            benchmark = i
+    return model
+
+def test(model, device, criterion, test_loader):
+    test_acc = []
     model.eval()
     acc_list=[]
     with torch.no_grad():
@@ -46,12 +59,17 @@ for epoch in range(num_epoch):
             image, label = image.to(device), label.to(device)
             probability = F.softmax(model(image), dim=1)
             test_loss = criterion(probability, label)
-            pred_label = torch.argmax(probability, dim=1)
-            accuracy=sum(pred_label==label)/pred_label.shape[0]
+            pred_label = probability.argmax(dim=1)
+            accuracy = accuracy_score(label, pred_label)
             acc_list.append(accuracy)
             mean_accur_batch=sum(acc_list)/len(acc_list)
-        print(f"Mean accuracy is: {accuracy}")
+            print(f"Accuracy for each epoch is: {accuracy}, test losses: {test_loss.item()}")
         test_acc.append(mean_accur_batch)
+
+    model.train()
+    return test_acc
+
+
         
 
 
