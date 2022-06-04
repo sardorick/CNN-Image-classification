@@ -12,8 +12,8 @@ class CNN(nn.Module):
         self.batch2 = nn.BatchNorm1d()
         self.batch3 = nn.BatchNorm1d()
         # self.batch2 = nn.MaxPool2d(kernel_size=3, stride=1)
-        self.fc1 = nn.Linear(128*28*28, 200)
-        self.fc2 = nn.Linear(200, 64)
+        self.fc1 = nn.Linear(128*28*28, 256)
+        self.fc2 = nn.Linear(256, 64)
         self.fc3 = nn.Linear(64, 6)
 
         
