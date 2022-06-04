@@ -16,7 +16,7 @@ model = CNN()
 train_loader, test_loader, class_list, class_idx=load_batch('/Users/szokirov/Documents/Datasets/Intel')
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 criterion = nn.CrossEntropyLoss()
-num_epoch = 20
+num_epoch = 1
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model.to(device)
 

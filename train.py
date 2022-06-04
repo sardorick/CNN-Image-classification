@@ -36,18 +36,19 @@ def fit(model, device, num_epoch, optimizer, criterion, train_loader):
             acc_list.append(accuracy)
             # print(f"Accuracy for each epoch is: {accuracy}, test losses: {loss.item()}")
 
-            print(f"Epoch: {epoch+1}/{num_epoch}, train losses: {loss.item()}, accuracy: {accuracy}")
+            print(f"Epoch: {epoch+1}/{num_epoch}, train losses: {loss.item()}")
         mean_accur_batch=sum(acc_list)/len(acc_list)
+        print(f"Train acc {mean_accur_batch}")
         avg_loss = sum(train_loss)/len(train_loss)
         train_losses_list.append(avg_loss)
         mean_acc.append(mean_accur_batch)
-    for i in mean_acc:
-        if benchmark < i:
-            torch.save(model.state_dict(),'model_trained.pth')
-            state_dict = torch.load('model_trained.pth')
-            print(state_dict.keys())
-            print(model.load_state_dict(state_dict))
-            benchmark = i
+    # for i in mean_acc:
+    #     if benchmark < i:
+    #         torch.save(model.state_dict(),'model_trained_test.pth')
+    #         state_dict = torch.load('model_trained_test.pth')
+    #         print(state_dict.keys())
+    #         print(model.load_state_dict(state_dict))
+    #         benchmark = i
     return model
 
 def test(model, device, criterion, test_loader):
@@ -64,6 +65,7 @@ def test(model, device, criterion, test_loader):
             acc_list.append(accuracy)
             mean_accur_batch=sum(acc_list)/len(acc_list)
             print(f"Accuracy for each epoch is: {accuracy}, test losses: {test_loss.item()}")
+        print(f"Test acc {mean_accur_batch}")
         test_acc.append(mean_accur_batch)
 
     model.train()
