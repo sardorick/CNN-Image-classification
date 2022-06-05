@@ -7,7 +7,8 @@ from model import CNN
 import matplotlib.pyplot as plt 
 
 
-train_model = torch.load('model_trained.pth')
+train_model = torch.load('model_tested_2.pth')
+
 model_state = train_model
 
 model = CNN()
@@ -37,7 +38,7 @@ def pred(image_path, model):
      model.eval()
      with torch.no_grad():
           prediction = model.forward(processed_image)
-          _, prediction_class = torch.argmax(prediction, dim=1)
+          _, prediction_class = torch.max(prediction, dim=1)
 
      plt.imshow(image)
      plt.title(f'Prediction class:  {prediction_class.item()}    ({classes_dict[prediction_class.item()]})', fontsize=15)
@@ -45,5 +46,5 @@ def pred(image_path, model):
 
      return
     
-image_path = '/Users/szokirov/Documents/Datasets/pred_intel/seg_pred/seg_pred/199.jpg'
+image_path = '/Users/szokirov/Documents/Datasets/pred_intel/seg_pred/seg_pred/117.jpg'
 pred(image_path, model)
