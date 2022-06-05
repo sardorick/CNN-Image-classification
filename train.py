@@ -77,7 +77,18 @@ plt.plot(acc_list, label='Accuracy')
 plt.show()
 
 
-        
+"""
+ 12/15 :  | Accuracy : 0.8571
+Train loss after epoch 13: 0.6221
+Test acc 0.8321618541033435, Test losses: 0.8067
+ 13/15 :  | Accuracy : 0.8322
+Train loss after epoch 14: 0.6050
+Test acc 0.8465995440729482, Test losses: 0.5976
+ 14/15 :  | Accuracy : 0.8466
+Train loss after epoch 15: 0.6005
+Test acc 0.8480243161094224, Test losses: 0.3650
+ 15/15 :  | Accuracy : 0.8480
+"""        
 
 
 

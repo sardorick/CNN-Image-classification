@@ -7,9 +7,9 @@ from model import CNN
 import matplotlib.pyplot as plt 
 
 
-train_model = torch.load('model_tested_2.pth')
+train_model = torch.load('saved_final_model')
 
-model_state = train_model
+model_state = train_model['model_state']
 
 model = CNN()
 model.load_state_dict(model_state)
@@ -46,5 +46,5 @@ def pred(image_path, model):
 
      return
     
-image_path = '/Users/szokirov/Documents/Datasets/pred_intel/seg_pred/seg_pred/117.jpg'
+image_path = '/Users/szokirov/Documents/Datasets/pred_intel/seg_pred/seg_pred/64.jpg'
 pred(image_path, model)
