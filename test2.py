@@ -46,5 +46,5 @@ def pred(image_path, model):
 
      return
     
-image_path = '/Users/szokirov/Documents/Datasets/pred_intel/seg_pred/seg_pred/64.jpg'
+image_path = '/Users/szokirov/Documents/pexels-kellie-churchman-1001682.jpeg'
 pred(image_path, model)
