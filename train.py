@@ -12,7 +12,7 @@ model = CNN()
 train_loader, test_loader, class_list, class_idx=load_batch('/Users/szokirov/Documents/Datasets/Intel')
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 criterion = nn.CrossEntropyLoss()
-num_epoch = 1
+num_epoch = 15
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 model.to(device)
 
@@ -23,7 +23,7 @@ test_losses_list = []
 test_acc = []
 
 for epoch in range(num_epoch):
-    test_accuracy, train_accuracy = 0, 0
+    test_accuracy, train_accuracy, running_loss_test = 0, 0, 0
 
     train_loss = []
     benchmark = 0.90
@@ -33,55 +33,40 @@ for epoch in range(num_epoch):
         image, label = image.to(device), label.to(device)
         optimizer.zero_grad()
         predictions = model.forward(image)
-        train_label = predictions.argmax(dim=1)
         loss = criterion(predictions, label)
         loss.backward()
-
         optimizer.step()
-    
         train_loss.append(loss.item())
-        train_accuracy += accuracy_score(label, train_label)
 
-    mean_accur_batch_train=train_accuracy/len(train_loader)
-    print(f"Train acc {mean_accur_batch_train}")
     avg_loss = sum(train_loss)/len(train_loss)
+    print(f"Train loss after epoch {epoch+1}: {avg_loss:.4f}")
     train_losses_list.append(avg_loss)
-    mean_acc.append(mean_accur_batch_train)
-    for i in mean_acc:
-        if benchmark < i:
-            torch.save(model.state_dict(),'model_trained_2.pth')
-            state_dict = torch.load('model_trained_2.pth')
-            print(state_dict.keys())
-            print(model.load_state_dict(state_dict))
-            benchmark = i
 
     model.eval()
     with torch.no_grad():
         for idx, (image, label) in enumerate(iter(test_loader)):
             image, label = image.to(device), label.to(device)
-            probability = F.softmax(model(image), dim=1)
+            probability = model.forward(image)
             test_loss = criterion(probability, label)
-            pred_label = probability.argmax(dim=1)
+            running_loss_test += test_loss.item()
+            pred_label = F.softmax(probability, dim=1).argmax(dim=1)
             test_accuracy += accuracy_score(label, pred_label)
-            acc_list.append(test_accuracy)
-        mean_accur_batch_test=test_accuracy/len(test_loader)
+        mean_accur_epoch_test=test_accuracy/len(test_loader) 
+        acc_list.append(mean_accur_epoch_test)
 
-        print(f"Test acc {mean_accur_batch_test}")
-        test_acc.append(mean_accur_batch_test)
-        # avg_loss_test = sum(test_loss)/len(test_loss)
-        # test_losses_list.append(avg_loss_test)
-
-
-    for i in test_acc:
-        if benchmark < i:
+            
+        print(f"Test acc {mean_accur_epoch_test}, Test losses: {test_loss:.4f}")
+        test_acc.append(mean_accur_epoch_test)
+        avg_loss_test = running_loss_test/len(test_loader)
+        test_losses_list.append(avg_loss_test)
+        if benchmark < mean_accur_epoch_test:
             torch.save(model.state_dict(),'model_tested_2.pth')
-            state_dict = torch.load('model_tested_2.pth')
-            print(state_dict.keys())
-            print(model.load_state_dict(state_dict))
-            benchmark = i
+            benchmark = mean_accur_epoch_test
+
+
 
     model.train()
-    print(f'{epoch+1:3}/{num_epoch} :  | Accuracy : {mean_accur_batch_test:.4f}')
+    print(f'{epoch+1:3}/{num_epoch} :  | Accuracy : {mean_accur_epoch_test:.4f}')
 
 
 torch.save({"model_state": model.state_dict()}, 'saved_final_model')
@@ -92,7 +77,18 @@ plt.plot(acc_list, label='Accuracy')
 plt.show()
 
 
-        
+"""
+ 12/15 :  | Accuracy : 0.8571
+Train loss after epoch 13: 0.6221
+Test acc 0.8321618541033435, Test losses: 0.8067
+ 13/15 :  | Accuracy : 0.8322
+Train loss after epoch 14: 0.6050
+Test acc 0.8465995440729482, Test losses: 0.5976
+ 14/15 :  | Accuracy : 0.8466
+Train loss after epoch 15: 0.6005
+Test acc 0.8480243161094224, Test losses: 0.3650
+ 15/15 :  | Accuracy : 0.8480
+"""        
 
 
 
