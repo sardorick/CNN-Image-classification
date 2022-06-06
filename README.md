@@ -36,6 +36,10 @@ This data was initially published on https://datahack.analyticsvidhya.com by Int
 Acknowledgements
 Thanks to https://datahack.analyticsvidhya.com for the challenge and Intel for the Data
 
+How to run the predictions:
+
+In order to run the predictions, open the terminal, go to the directory of the project. Then, run 'python test2.py path_to_image' and you will have a prediction from the model. 
+
 Conclusions and future plans:
 
 We want to work on the model and improve it by changing the model architecture. The current version of the model is predicting unseen input data with high accuracy, but there could be small errors in complex images. 
