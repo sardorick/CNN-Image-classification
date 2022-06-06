@@ -20,7 +20,7 @@ def pred(image_path, model):
                                                             [0.5, 0.5, 0.5])])
 
 
-     classes_dict = {
+     class_idx = {
          0: 'buildings',
          1: 'forest',
          2: 'glacier',
@@ -39,7 +39,7 @@ def pred(image_path, model):
           _, prediction_class = torch.max(prediction, dim=1)
 
      plt.imshow(image)
-     plt.title(f'Landmark in the photo is: {classes_dict[prediction_class.item()]}', fontsize=15)
+     plt.title(f'Landmark in the photo is: {class_idx[prediction_class.item()]}', fontsize=15)
      plt.show()
 
      return
