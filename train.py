@@ -3,7 +3,6 @@ import torch.nn.functional as F
 import torch 
 from model import CNN
 import matplotlib.pyplot as plt
-import numpy as np
 from data_loader import load_batch
 from torch import optim
 from sklearn.metrics import accuracy_score
@@ -93,16 +92,6 @@ Test acc 0.8480243161094224, Test losses: 0.3650
 
 
 
-
-"""
-        if benchmark < mean_acc:
-            torch.save(model.state_dict(),'model_trained.pth')
-            state_dict = torch.load('model_trained.pth')
-            print(state_dict.keys())
-            print(model.load_state_dict(state_dict))
-            benchmark = mean_acc
-        model.train()
-        """
 
 
 
