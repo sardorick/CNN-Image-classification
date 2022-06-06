@@ -1,13 +1,10 @@
 
 import torch.nn as nn
-import torch.nn.functional as F 
 import torch 
 from model import CNN
 import matplotlib.pyplot as plt
-import numpy as np
 from data_loader import load_batch
 from torch import optim
-from sklearn.metrics import accuracy_score
 from train import fit, test
 
 

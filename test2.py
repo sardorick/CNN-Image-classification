@@ -1,11 +1,9 @@
-from ast import arg
-from tkinter import font
 from PIL import Image
 from torchvision import transforms 
 import torch  
 from model import CNN
 import matplotlib.pyplot as plt 
-
+import argparse
 
 train_model = torch.load('saved_final_model')
 
@@ -41,10 +39,15 @@ def pred(image_path, model):
           _, prediction_class = torch.max(prediction, dim=1)
 
      plt.imshow(image)
-     plt.title(f'Prediction class:  {prediction_class.item()}    ({classes_dict[prediction_class.item()]})', fontsize=15)
+     plt.title(f'Landmark in the photo is: {classes_dict[prediction_class.item()]}', fontsize=15)
      plt.show()
 
      return
-    
-image_path = '/Users/szokirov/Documents/pexels-kellie-churchman-1001682.jpeg'
+
+parser = argparse.ArgumentParser(description='Landmark classifier')
+parser.add_argument('test_data', type=str, help='Input path to test image')
+args = parser.parse_args()
+test_data = args.test_data
+
+image_path = test_data
 pred(image_path, model)
