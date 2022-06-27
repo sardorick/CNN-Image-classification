@@ -41,7 +41,8 @@ Thanks to https://datahack.analyticsvidhya.com for the challenge and Intel for t
 In order to run the predictions, open the terminal, go to the directory of the project. Then, run 'python test2.py path_to_image' and you will have a prediction from the model. 
 
 **How the model looks:**
-![alt text](Screen Shot 2022-06-27 at 15.25.34.png)
+
+![alt text](model_work.png)
 
 The model is able to classify buildings of Greenland.
 
